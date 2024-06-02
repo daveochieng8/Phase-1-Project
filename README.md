@@ -56,10 +56,10 @@ There is a strong positive correlation between production budget and gross reven
 The genres with the tallest bars are the most profitable on a global scale. Animation, adventure and Sci-Fi have the tallest bars.
 These genres generate the highest average worldwide profits.
 ### Conclusion and Recommendations
-##### Conclusion:
+### Conclusion:
 The analysis reveals that certain genres consistently perform better both domestically and worldwide. Action, Science Fiction, and Adventure films generally generate the highest average revenues and profits. Furthermore, the analysis of different budget ranges reveals that mid-range to high-range budgets often result in the most profitable movies.
 
-##### Recommendations:
+### Recommendations:
 
 **1. Prioritize Profitable Genres:** Concentrate your efforts and resources on developing films within the Action, Science Fiction, and Adventure genres, as the analysis indicates these genres consistently generate the highest profits.
 
