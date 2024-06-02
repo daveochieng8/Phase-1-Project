@@ -1,28 +1,5 @@
----
-jupyter:
-  kernelspec:
-    display_name: learn-env
-    language: python
-    name: python3
-  language_info:
-    codemirror_mode:
-      name: ipython
-      version: 3
-    file_extension: .py
-    mimetype: text/x-python
-    name: python
-    nbconvert_exporter: python
-    pygments_lexer: ipython3
-    version: 3.8.5
-  nbformat: 4
-  nbformat_minor: 4
----
-
-::: {.cell .markdown}
 ## Exploratory Data Analysis for Microsoft\'s New Movie Studio
-:::
 
-::: {.cell .markdown}
 ## Overview
 
 In this project, we will perform exploratory data analysis (EDA) to
@@ -30,9 +7,7 @@ generate insights for Microsoft, helping them decide what type of films
 to create for their new movie studio. We will use various datasets
 related to movies, analyze trends, and provide actionable
 recommendations based on our findings.
-:::
 
-::: {.cell .markdown}
 ## Business Problem
 
 Microsoft sees all the big companies creating original video content and
@@ -41,9 +16,7 @@ studio but lack knowledge about creating movies. Our task is to explore
 what types of films are currently doing the best at the box office and
 translate those findings into actionable insights for Microsoft\'s new
 movie studio.
-:::
 
-::: {.cell .markdown}
 ## Objectives
 
 The objectives of this project are to:
@@ -52,205 +25,7 @@ The objectives of this project are to:
 2.  Identify the top-performing genres.
 3.  Assess profitability by genre.
 :::
-
-::: {.cell .markdown}
-## Loading Data
-:::
-
-::: {.cell .code execution_count="1"}
-``` python
-import pandas as pd 
-import numpy as np
-import sqlite3
-import matplotlib.pyplot as plt
-import seaborn as sns
-from matplotlib.ticker import ScalarFormatter
-```
-:::
-
-::: {.cell .code execution_count="2"}
-``` python
-bom_movie_gross = pd.read_csv('data/bom.movie_gross.csv')
-rt_movie_info = pd.read_csv('data/rt.movie_info.tsv', sep='\t')
-rt_reviews = pd.read_csv('data/rt.reviews.tsv', sep='\t', encoding='ISO-8859-1')
-tmdb_movies = pd.read_csv('data/tmdb.movies.csv')
-tn_movie_budgets = pd.read_csv('data/tn.movie_budgets.csv')
-
-conn = sqlite3.connect('data/im.db')
-imdb_movie_basics = pd.read_sql_query("SELECT * FROM movie_basics", conn)
-imdb_movie_ratings = pd.read_sql_query("SELECT * FROM movie_ratings", conn)
-```
-:::
-
-::: {.cell .markdown}
-Displaying the first few rows of each dataframe.
-:::
-
-::: {.cell .code execution_count="3"}
-``` python
-
-print("Movie Gross Data:")
-print(bom_movie_gross.head())
-print("-------------------------------------------------------------")
-
-print("Movie Info Data:")
-print(rt_movie_info.head())
-print("-------------------------------------------------------------")
-
-print("Reviews Data:")
-print(rt_reviews.head())
-print("-------------------------------------------------------------")
-
-print("TMDB Movies Data:")
-print(tmdb_movies.head())
-print("-------------------------------------------------------------")
-
-print("Movie Budgets Data:")
-print(tn_movie_budgets.head())
-print("-------------------------------------------------------------")
-
-print("Movie Basics Data:")
-print(imdb_movie_basics.head())
-print("-------------------------------------------------------------")
-
-print("Movie Ratings Data:")
-print(imdb_movie_ratings.head())
-```
-
-::: {.output .stream .stdout}
-    Movie Gross Data:
-                                             title studio  domestic_gross  \
-    0                                  Toy Story 3     BV     415000000.0   
-    1                   Alice in Wonderland (2010)     BV     334200000.0   
-    2  Harry Potter and the Deathly Hallows Part 1     WB     296000000.0   
-    3                                    Inception     WB     292600000.0   
-    4                          Shrek Forever After   P/DW     238700000.0   
-
-      foreign_gross  year  
-    0     652000000  2010  
-    1     691300000  2010  
-    2     664300000  2010  
-    3     535700000  2010  
-    4     513900000  2010  
-    -------------------------------------------------------------
-    Movie Info Data:
-       id                                           synopsis rating  \
-    0   1  This gritty, fast-paced, and innovative police...      R   
-    1   3  New York City, not-too-distant-future: Eric Pa...      R   
-    2   5  Illeana Douglas delivers a superb performance ...      R   
-    3   6  Michael Douglas runs afoul of a treacherous su...      R   
-    4   7                                                NaN     NR   
-
-                                     genre          director  \
-    0  Action and Adventure|Classics|Drama  William Friedkin   
-    1    Drama|Science Fiction and Fantasy  David Cronenberg   
-    2    Drama|Musical and Performing Arts    Allison Anders   
-    3           Drama|Mystery and Suspense    Barry Levinson   
-    4                        Drama|Romance    Rodney Bennett   
-
-                                writer  theater_date      dvd_date currency  \
-    0                   Ernest Tidyman   Oct 9, 1971  Sep 25, 2001      NaN   
-    1     David Cronenberg|Don DeLillo  Aug 17, 2012   Jan 1, 2013        $   
-    2                   Allison Anders  Sep 13, 1996  Apr 18, 2000      NaN   
-    3  Paul Attanasio|Michael Crichton   Dec 9, 1994  Aug 27, 1997      NaN   
-    4                     Giles Cooper           NaN           NaN      NaN   
-
-      box_office      runtime             studio  
-    0        NaN  104 minutes                NaN  
-    1    600,000  108 minutes  Entertainment One  
-    2        NaN  116 minutes                NaN  
-    3        NaN  128 minutes                NaN  
-    4        NaN  200 minutes                NaN  
-    -------------------------------------------------------------
-    Reviews Data:
-       id                                             review rating   fresh  \
-    0   3  A distinctly gallows take on contemporary fina...    3/5   fresh   
-    1   3  It's an allegory in search of a meaning that n...    NaN  rotten   
-    2   3  ... life lived in a bubble in financial dealin...    NaN   fresh   
-    3   3  Continuing along a line introduced in last yea...    NaN   fresh   
-    4   3             ... a perverse twist on neorealism...     NaN   fresh   
-
-               critic  top_critic         publisher               date  
-    0      PJ Nabarro           0   Patrick Nabarro  November 10, 2018  
-    1  Annalee Newitz           0           io9.com       May 23, 2018  
-    2    Sean Axmaker           0  Stream on Demand    January 4, 2018  
-    3   Daniel Kasman           0              MUBI  November 16, 2017  
-    4             NaN           0      Cinema Scope   October 12, 2017  
-    -------------------------------------------------------------
-    TMDB Movies Data:
-       Unnamed: 0            genre_ids     id original_language  \
-    0           0      [12, 14, 10751]  12444                en   
-    1           1  [14, 12, 16, 10751]  10191                en   
-    2           2        [12, 28, 878]  10138                en   
-    3           3      [16, 35, 10751]    862                en   
-    4           4        [28, 878, 12]  27205                en   
-
-                                     original_title  popularity release_date  \
-    0  Harry Potter and the Deathly Hallows: Part 1      33.533   2010-11-19   
-    1                      How to Train Your Dragon      28.734   2010-03-26   
-    2                                    Iron Man 2      28.515   2010-05-07   
-    3                                     Toy Story      28.005   1995-11-22   
-    4                                     Inception      27.920   2010-07-16   
-
-                                              title  vote_average  vote_count  
-    0  Harry Potter and the Deathly Hallows: Part 1           7.7       10788  
-    1                      How to Train Your Dragon           7.7        7610  
-    2                                    Iron Man 2           6.8       12368  
-    3                                     Toy Story           7.9       10174  
-    4                                     Inception           8.3       22186  
-    -------------------------------------------------------------
-    Movie Budgets Data:
-       id  release_date                                        movie  \
-    0   1  Dec 18, 2009                                       Avatar   
-    1   2  May 20, 2011  Pirates of the Caribbean: On Stranger Tides   
-    2   3   Jun 7, 2019                                 Dark Phoenix   
-    3   4   May 1, 2015                      Avengers: Age of Ultron   
-    4   5  Dec 15, 2017            Star Wars Ep. VIII: The Last Jedi   
-
-      production_budget domestic_gross worldwide_gross  
-    0      $425,000,000   $760,507,625  $2,776,345,279  
-    1      $410,600,000   $241,063,875  $1,045,663,875  
-    2      $350,000,000    $42,762,350    $149,762,350  
-    3      $330,600,000   $459,005,868  $1,403,013,963  
-    4      $317,000,000   $620,181,382  $1,316,721,747  
-    -------------------------------------------------------------
-    Movie Basics Data:
-        movie_id                    primary_title              original_title  \
-    0  tt0063540                        Sunghursh                   Sunghursh   
-    1  tt0066787  One Day Before the Rainy Season             Ashad Ka Ek Din   
-    2  tt0069049       The Other Side of the Wind  The Other Side of the Wind   
-    3  tt0069204                  Sabse Bada Sukh             Sabse Bada Sukh   
-    4  tt0100275         The Wandering Soap Opera       La Telenovela Errante   
-
-       start_year  runtime_minutes                genres  
-    0        2013            175.0    Action,Crime,Drama  
-    1        2019            114.0       Biography,Drama  
-    2        2018            122.0                 Drama  
-    3        2018              NaN          Comedy,Drama  
-    4        2017             80.0  Comedy,Drama,Fantasy  
-    -------------------------------------------------------------
-    Movie Ratings Data:
-         movie_id  averagerating  numvotes
-    0  tt10356526            8.3        31
-    1  tt10384606            8.9       559
-    2   tt1042974            6.4        20
-    3   tt1043726            4.2     50352
-    4   tt1060240            6.5        21
-:::
-:::
-
-::: {.cell .markdown}
-Upon initial examination of the dataframes, the following datasets were
-selected as they contain the necessary information to meet the project
-objectives:
-
--   bom_movie_gross
--   tn_movie_budgets
--   imdb_movie_basics
--   imdb_movie_ratings
-:::
-
-::: {.cell .markdown}
+}
 #### Inspecting the selected datasets
 :::
 
