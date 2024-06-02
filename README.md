@@ -19,18 +19,52 @@ The objectives of this project are to:
 2. Identify the top-performing genres.
 3. Assess profitability by genre.
 
+## Data 
+
+The available datasets are:
+1. Box Office Mojo (bom_movie_gross.csv)
+2. Rotten Tomatoes Movie Info (rt.movie_info.tsv)
+3. Rotten Tomatoes Reviews (rt.reviews.tsv)
+4. TMDB Movies (tmdb.movies.csv)
+5. The Numbers Movie Budgets (tn.movie_budgets.csv)
+6. IMDB Movie Basics (imdb.movie_basics)
+7. IMDB Movie Ratings (imdb.movie_ratings)
+
+### Datasets Chosen for Analysis
+After inspecting the datasets, the following were selected for analysis as they contain the necessary information to meet the project objectives:
+
+1. The Numbers Movie Budgets (tn.movie_budgets.csv)
+   Contains comprehensive budget details and earnings, which are crucial for analyzing profitability.
+
+3. IMDB Movie Basics (imdb.movie_basics)
+   Provides detailed information on movie titles, genres, and runtime.
+   
+3. IMDB Movie Ratings (imdb.movie_ratings)
+   Offers insights into movie popularity through ratings and votes.
+
 ## Exploratory Data Analysis (EDA)
+
+After cleaning and merging the datasets, we performed exploratory data analysis (EDA) to understand the data better and extract actionable insights. Below is a summary of the EDA process:
+
 #### Distribution of Production Budgets
 ![image](https://github.com/daveochieng8/Phase-1-Project/assets/58653689/951adef8-9f36-4117-b254-cd8b64fbe6d7)
+
+The histogram shows the distribution of production budgets for movies in the dataset. This helps identify the most common budget ranges and outliers.
 
 #### Distribution of Domestic Gross
 ![image](https://github.com/daveochieng8/Phase-1-Project/assets/58653689/c27e4b0b-0ce4-46fe-98c3-691fda3096b6)
 
+The histogram shows the distribution of domestic gross earnings. This helps understand how much revenue movies typically make domestically.
+
 #### Distribution of Worldwide Gross
 ![image](https://github.com/daveochieng8/Phase-1-Project/assets/58653689/6d121884-00c1-4abd-a8bd-47f39f5e0fc1)
 
+The histogram shows the distribution of worldwide gross earnings. This helps understand global revenue patterns for movies.
+
 #### Distribution of IMDB Ratings
 ![image](https://github.com/daveochieng8/Phase-1-Project/assets/58653689/2ef4b5a3-8979-4ccf-babf-352757b945bc)
+
+The histogram shows the distribution of average IMDB ratings. This helps identify the typical rating range for movies and any outliers.
 
 #### Production Budget vs. Domestic Gross
 ![image](https://github.com/daveochieng8/Phase-1-Project/assets/58653689/a9e641c4-fedb-4aa5-bbe4-a5918d4ea659)
@@ -49,6 +83,8 @@ There is a strong positive correlation between production budget and gross reven
 
 ### Identifying the most profitable genres
 ![image](https://github.com/daveochieng8/Phase-1-Project/assets/58653689/9a8bad5a-386b-4153-b4ed-49a26bfcaa71)
+
+The bar chart shows the average domestic profit for each genre. This helps identify the most profitable genres domestically.
 
 ### Average Worldwide Profit by Genre
 ![image](https://github.com/daveochieng8/Phase-1-Project/assets/58653689/6eece0b7-2b45-4a6e-85d9-9f2d287c8380)
